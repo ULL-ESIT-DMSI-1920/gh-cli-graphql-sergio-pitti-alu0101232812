@@ -1,0 +1,20 @@
+{
+  "name": "gh-repo-rename-sergiopitti",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gh-repo-rename-sergiopitti.js",
+  "scripts": {
+    "create-prueba": "gh create-repo prueba ULL-ESIT-DMSI-1920",
+    "list-prueba": "gh submodule-add -s prueba -o  ULL-ESIT-DMSI-1920 -n",
+    "start": "node gh-repo-rename-sergiopitti.js",
+    "test": "./gh-repo-rename-sergiopitti -o ULL-ESIT-DMSI-1920 -r pruebasergio -n pruebasergio-funciona; npm run list-prueba",
+    "back": "./gh-repo-rename-sergiopitti -o ULL-ESIT-DMSI-1920 -r pruebasergio-funciona -n pruebasergio; npm run list-prueba"
+  },
+  "keywords": [],
+  "author": "Sergio Pitti de Armas",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^8.3.0",
+    "shelljs": "^0.8.4"
+  }
+}
