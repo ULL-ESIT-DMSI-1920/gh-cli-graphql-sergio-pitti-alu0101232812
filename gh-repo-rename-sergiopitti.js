@@ -20,6 +20,29 @@ program.parse(process.argv);
 
 let args = program.args;
 
+const getrepoID = (owner, name) => `
+query getrepoID{
+    repository(owner: "${owner}", name: "${name}"){
+      id
+    }
+  }
+ `;
+
+const renamerepo = (id, newName) => `   
+  mutation renamerepo{
+    updateRepository(input: 
+      {
+        name: "${newName}"
+        repositoryId: "${id}"
+      }
+    ) {
+      repository{
+        name
+      }
+    }
+  }
+`;
+
 let { org, repo, name } = program.opts();
 
 if (!org || ! repo || !name) program.help();
@@ -31,35 +54,23 @@ if (!shell.which('gh')) {
    shell.echo('Sorry, this extension requires GitHub Cli');
 }
 
-/*
-let r = shell.exec(
-    `gh api -X PATCH /repos/${org}/${repo} -f name=${name}`, 
-    {silent: true}
+let r = shell.exec(`gh api graphql -f query='${getrepoID(org, repo)}' --jq '.data.repository.id'`, 
+  {silent: true}
 );
+if (r.code !== 0) {
+  console.error(r.stderr)
+  process.exit(r.code)
+}
 
-r = JSON.parse(r.stdout)
-console.log(`The repo has been renamed to ${r.full_name}`);
-*/
+//console.log("getrepoID return: \n", r.stdout)
+const ID = r.stdout
 
-const getrepoID = (owner, newName) => `
-query getrepoID{
-    repository(owner: "ULL-ESIT-DMSI-1920", name: "pruebasergio-funciona"){
-      id
-    }
-  }
- `;
+r = shell.exec(`gh api graphql -f query='${renamerepo(ID, name)}' --jq '.data.updateRepository.repository.name'` , 
+  {silent: true}
+);
+if (r.code !== 0) {
+  console.error(r.stderr)
+  process.exit(r.code)
+}
 
-const renamerepo = (id) => `   
-  mutation renamerepo($id: ID!){
-    updateRepository(input: 
-      {
-        name: "pruebasergio"
-        repositoryId: $id
-      }
-    ) {
-      repository{
-        name
-      }
-    }
-  }
-`;
+console.log("El nombre del repositorio es: ", r.stdout)
