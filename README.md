@@ -1,6 +1,6 @@
 This extension renames a repository
 
-### Instalation 
+### Instalation 
 `gh extension install alu0101232812/gh-repo-rename` 
 
 ### Usage 
