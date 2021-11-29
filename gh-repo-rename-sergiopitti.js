@@ -73,4 +73,4 @@ if (r.code !== 0) {
   process.exit(r.code)
 }
 
-console.log("El nombre del repositorio es: ", r.stdout)
+console.log(`El nuevo nombre del repositorio es: '${r.stdout.replace(/\s+$/, '')}'`)
